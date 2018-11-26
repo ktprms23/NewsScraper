@@ -6,7 +6,7 @@ from time import mktime
 from datetime import datetime
 
 # Set the limit for number of articles to download
-LIMIT = 4
+LIMIT = 20
 
 data = {}
 data['newspapers'] = {}
@@ -30,6 +30,9 @@ for company, value in companies.items():
             "link": value['link'],
             "articles": []
         }
+        # TODO: dump data to each company file
+        outputFile = open( company + "_rss.txt", "a", encoding='utf8')
+        
         for entry in d.entries:
             # Check if publish date is provided, if no the article is skipped.
             # This is done to keep consistency in the data and to keep the script from crashing.
@@ -55,6 +58,11 @@ for company, value in companies.items():
                 newsPaper['articles'].append(article)
                 print(count, "articles downloaded from", company, ", url: ", entry.link)
                 count = count + 1
+                # TODO: dump data to each company file
+                if outputFile:
+                    outputFile.write( '-----' + str(count - 1) + '-----\n' )
+                    outputFile.write( '***** ' + content.title + ' *****\n\n' )
+                    outputFile.write( content.text + '\n\n' )
     else:
         # This is the fallback method if a RSS-feed link is not provided.
         # It uses the python newspaper library to extract articles
@@ -65,6 +73,9 @@ for company, value in companies.items():
             "articles": []
         }
         noneTypeCount = 0
+
+        # TODO: dump data to each company file
+        outputFile = open( company + "_sites.txt", "a", encoding='utf8')
         for content in paper.articles:
             if count > LIMIT:
                 break
@@ -95,13 +106,20 @@ for company, value in companies.items():
             print(count, "articles downloaded from", company, " using newspaper, url: ", content.url)
             count = count + 1
             noneTypeCount = 0
+            # TODO: dump data to each company file
+            if outputFile:
+                outputFile.write( '-----' + str(count - 1) + '-----\n' )
+                outputFile.write( '***** ' + content.title + ' *****\n\n' )
+                outputFile.write( content.text + '\n\n' )
+                outputFile.write( content.url + '\n\n' )
+                outputFile.write( content.publish_date.isoformat() + '\n\n' )
     count = 1
     data['newspapers'][company] = newsPaper
 
 # Finally it saves the articles as a JSON-file.
 try:
-    with open('scraped_articles.json', 'w') as outfile:
-        json.dump(data, outfile)
+    with open('scraped_articles.json', 'w', encoding='utf8') as outfile:
+        json.dump(data, outfile, ensure_ascii=False)
 except Exception as e: print(e)
 
 
