@@ -1,3 +1,5 @@
+### Original auther: https://github.com/holwech/NewsScraper
+
 # NewsScraper - Scrape any newspaper automatically
 This is a simple python script for automatically scraping the most recent articles from any news-site.
 Just add the websites you want to scrape to `NewsPapers.json` and the script will go through
