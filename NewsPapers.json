@@ -13,5 +13,23 @@
         "ltn": {
 		"rss": "http://news.ltn.com.tw/rss/politics.xml",
 		"link": "http://www.ltn.com.tw/"
-	}
+	},
+        "peoplenews": {
+                "link": "http://www.peoplenews.tw/list/%E6%94%BF%E6%B2%BB"
+        },
+        "udn": {
+                "rss": "https://udn.com/rssfeed/news/2/6638?ch=news",
+                "link": "https://udn.com/news/index"
+        },
+        "ettoday": {
+                "rss": "http://feeds.feedburner.com/ettoday/news?format=xml",
+                "link": "https://www.ettoday.net/news/focus/%E6%94%BF%E6%B2%BB/"
+        },
+        "chinatimes": {
+                "rss": "https://www.chinatimes.com/rss/realtimenews-politic.xml",
+                "link": "https://www.chinatimes.com/politic/"
+        },
+        "set": {
+                "link": "https://www.setn.com/"
+        }
 }

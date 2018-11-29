@@ -17,6 +17,8 @@ with open('NewsPapers.json') as data_file:
 
 count = 1
 
+nowTime = datetime.now().strftime( "_%Y-%m-%d_%H-%M-%S" )
+
 # Iterate through each news company
 for company, value in companies.items():
     # If a RSS link is provided in the JSON file, this will be the first choice.
@@ -31,7 +33,7 @@ for company, value in companies.items():
             "articles": []
         }
         # TODO: dump data to each company file
-        outputFile = open( company + "_rss.txt", "a", encoding='utf8')
+        outputFile = open( company + nowTime + "_rss.txt", "a", encoding='utf8')
         
         for entry in d.entries:
             # Check if publish date is provided, if no the article is skipped.
@@ -75,7 +77,7 @@ for company, value in companies.items():
         noneTypeCount = 0
 
         # TODO: dump data to each company file
-        outputFile = open( company + "_sites.txt", "a", encoding='utf8')
+        outputFile = open( company + nowTime + "_sites.txt", "a", encoding='utf8')
         for content in paper.articles:
             if count > LIMIT:
                 break
@@ -118,7 +120,7 @@ for company, value in companies.items():
 
 # Finally it saves the articles as a JSON-file.
 try:
-    with open('scraped_articles.json', 'w', encoding='utf8') as outfile:
+    with open('scraped_articles' + nowTime + '.json', 'w', encoding='utf8') as outfile:
         json.dump(data, outfile, ensure_ascii=False)
 except Exception as e: print(e)
 
