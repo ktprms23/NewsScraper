@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--[if IE 8 ]><html class="no-js oldie ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+
+
+<title>News Scraper</title>
+
+<link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+<script src="semantic/dist/semantic.min.js"></script>
+<script src="semantic/dist/components/accordion.js"></script>
+
+<script language='javascript'>
+
+  $(document).ready(function() {
+    $('.ui.accordion')
+    .accordion();
+  });
+
+</script>
+
+</head>
+
+<body style="background-color: black">
+<!--<body>-->
+
+
+  <div class="ui inverted segment">
+    <div class="ui inverted accordion">
+      <div class="title"><i class="dropdown icon"></i>News Scraper</div>
+      <div class="content">
+        <p class="transition hidden">Fetching News from the site user provides.</p>
+      </div>
+      
+      <div class="title"><i class="dropdown icon"></i>Author</div>
+      <div class="content">
+        <p class="transition hidden">HHSK@TAIWAN</p>
+        <p class="transition hidden">CQua team</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="ui divided" style="color:white"></div>
+
+
+</body>
+
+</html>

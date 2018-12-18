@@ -4,6 +4,21 @@ import newspaper
 from newspaper import Article
 from time import mktime
 from datetime import datetime
+import pathlib
+from shutil import copyfile
+
+
+
+
+
+
+
+
+def createHTML(nowday):
+
+    copyfile('index_head.txt', 'news_' + nowday + '.html')
+    return open( 'news_' + nowTime + '.html', "a", encoding='utf8')
+
 
 # Set the limit for number of articles to download
 LIMIT = 20
@@ -17,7 +32,14 @@ with open('NewsPapers.json') as data_file:
 
 count = 1
 
+nowDay = datetime.now().strftime( '%Y-%m-%d' )
 nowTime = datetime.now().strftime( "_%Y-%m-%d_%H-%M-%S" )
+
+pathlib.Path( 'news/' + nowDay ).mkdir(parents=True, exist_ok=True)
+
+
+htmlFile = createHTML(nowTime)
+
 
 # Iterate through each news company
 for company, value in companies.items():
@@ -32,9 +54,16 @@ for company, value in companies.items():
             "link": value['link'],
             "articles": []
         }
+
+
+
         # TODO: dump data to each company file
-        outputFile = open( company + nowTime + "_rss.txt", "a", encoding='utf8')
-        
+        outputFile = open( 'news/' + nowDay + '/' + company + nowTime + "_rss.txt", "a", encoding='utf8')
+        if htmlFile:
+            htmlFile.write( '\n<h1 style=\'color: white\'>' + company + '</h1>\n' )
+            htmlFile.write( '  <div class="ui inverted segment">\n' )
+            htmlFile.write( '    <div class="ui inverted accordion" style="width:600px;">\n' )
+#        outputFile = open( 'index_', "a", encoding='utf8')
         for entry in d.entries:
             # Check if publish date is provided, if no the article is skipped.
             # This is done to keep consistency in the data and to keep the script from crashing.
@@ -65,6 +94,15 @@ for company, value in companies.items():
                     outputFile.write( '-----' + str(count - 1) + '-----\n' )
                     outputFile.write( '***** ' + content.title + ' *****\n\n' )
                     outputFile.write( content.text + '\n\n' )
+                if htmlFile:
+                    htmlFile.write( '      <div class="title"><i class="dropdown icon"></i>' + content.title + '</div>\n' )
+                    htmlFile.write( '      <div class="content">\n' )
+                    formattedText = content.text.replace( "\n", "<br>" )
+                    htmlFile.write( '        <p class="transition hidden"><blockquote>' + formattedText + '</blockquote></p>\n' )
+                    htmlFile.write( '      </div>\n' )
+        if htmlFile:
+            htmlFile.write( '    </div>' )
+            htmlFile.write( '  </div>' )
     else:
         # This is the fallback method if a RSS-feed link is not provided.
         # It uses the python newspaper library to extract articles
@@ -77,7 +115,13 @@ for company, value in companies.items():
         noneTypeCount = 0
 
         # TODO: dump data to each company file
-        outputFile = open( company + nowTime + "_sites.txt", "a", encoding='utf8')
+        outputFile = open( 'news/' + nowDay + '/' + company + nowTime + "_sites.txt", "a", encoding='utf8')
+
+        if htmlFile:
+            htmlFile.write( '\n<h1 style=\'color: white\'>' + company + '</h1>\n' )
+            htmlFile.write( '  <div class="ui inverted segment">\n' )
+            htmlFile.write( '    <div class="ui inverted accordion" style="width:600px;">\n' )
+
         for content in paper.articles:
             if count > LIMIT:
                 break
@@ -115,12 +159,24 @@ for company, value in companies.items():
                 outputFile.write( content.text + '\n\n' )
                 outputFile.write( content.url + '\n\n' )
                 outputFile.write( content.publish_date.isoformat() + '\n\n' )
+            if htmlFile:
+                htmlFile.write( '      <div class="title"><i class="dropdown icon"></i>' + content.title + '</div>\n' )
+                htmlFile.write( '      <div class="content">\n' )
+                formattedText = content.text.replace( "\n", "<br>" )
+                htmlFile.write( '        <p class="transition hidden"><blockquote>' + formattedText + '</blockquote></p>\n' )
+                htmlFile.write( '      </div>\n' )
+        if htmlFile:
+            htmlFile.write( '    </div>' )
+            htmlFile.write( '  </div>' )
     count = 1
     data['newspapers'][company] = newsPaper
 
+if htmlFile:
+    htmlFile.write( '</body>' )
+    htmlFile.write( '</html>' )
 # Finally it saves the articles as a JSON-file.
 try:
-    with open('scraped_articles' + nowTime + '.json', 'w', encoding='utf8') as outfile:
+    with open('news/' + nowDay + '/' + 'scraped_articles' + nowTime + '.json', 'w', encoding='utf8') as outfile:
         json.dump(data, outfile, ensure_ascii=False)
 except Exception as e: print(e)
 

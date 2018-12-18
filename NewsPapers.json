@@ -1,11 +1,4 @@
 {
-	"cnn": {
-		"link": "http://edition.cnn.com/"
-	},
-	"bbc": {
-		"rss": "http://feeds.bbci.co.uk/news/rss.xml",
-		"link": "http://www.bbc.com/"
-	},
 	"applenews": {
 		"rss": "https://tw.appledaily.com/rss/newcreate/kind/rnews/type/101",
                 "link": "https://tw.appledaily.com/"
@@ -21,15 +14,14 @@
                 "rss": "https://udn.com/rssfeed/news/2/6638?ch=news",
                 "link": "https://udn.com/news/index"
         },
-        "ettoday": {
-                "rss": "http://feeds.feedburner.com/ettoday/news?format=xml",
-                "link": "https://www.ettoday.net/news/focus/%E6%94%BF%E6%B2%BB/"
-        },
         "chinatimes": {
                 "rss": "https://www.chinatimes.com/rss/realtimenews-politic.xml",
                 "link": "https://www.chinatimes.com/politic/"
         },
         "set": {
                 "link": "https://www.setn.com/"
+        },
+        "ettoday": {
+                "link": "https://www.ettoday.net/news/focus/%E6%94%BF%E6%B2%BB/"
         }
 }
