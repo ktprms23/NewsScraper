@@ -16,12 +16,12 @@ from shutil import copyfile
 
 def createHTML(nowday):
 
-    copyfile('index_head.txt', 'news_' + nowday + '.html')
-    return open( 'news_' + nowTime + '.html', "a", encoding='utf8')
+    copyfile('index_head.txt', 'news' + nowday + '.html')
+    return open( 'news' + nowday + '.html', "a", encoding='utf8')
 
 
 # Set the limit for number of articles to download
-LIMIT = 20
+LIMIT = 50
 
 data = {}
 data['newspapers'] = {}
@@ -74,6 +74,11 @@ for company, value in companies.items():
                 article['link'] = entry.link
                 date = entry.published_parsed
                 article['published'] = datetime.fromtimestamp(mktime(date)).isoformat()
+                
+                # if the time is out of date, ignore it.
+                if not str(article['published']).startswith( nowDay ):
+                    print( 'Got a news but not today: {}, {}'.format(nowDay, article['published']) )
+                    continue
                 try:
                     content = Article(entry.link)
                     content.download()
@@ -97,6 +102,8 @@ for company, value in companies.items():
                 if htmlFile:
                     htmlFile.write( '      <div class="title"><i class="dropdown icon"></i>' + content.title + '</div>\n' )
                     htmlFile.write( '      <div class="content">\n' )
+                    htmlFile.write( '        <a href="' + entry.link + '" target="_blank"><blockquote>NEWS link</blockquote></a>\n' )
+                    htmlFile.write( '        <p class="transition hidden"><blockquote>Published time: ' + article['published'] + '</blockquote></p>\n' )
                     formattedText = content.text.replace( "\n", "<br>" )
                     htmlFile.write( '        <p class="transition hidden"><blockquote>' + formattedText + '</blockquote></p>\n' )
                     htmlFile.write( '      </div>\n' )
@@ -148,6 +155,12 @@ for company, value in companies.items():
             article['text'] = content.text
             article['link'] = content.url
             article['published'] = content.publish_date.isoformat()
+
+            # if the time is out of date, ignore it.
+            if not str(article['published']).startswith( nowDay ):
+                print( 'Got a news but not today: {}, {}'.format(nowDay, article['published']) )
+                count = count - 1
+                continue
             newsPaper['articles'].append(article)
             print(count, "articles downloaded from", company, " using newspaper, url: ", content.url)
             count = count + 1
@@ -162,6 +175,8 @@ for company, value in companies.items():
             if htmlFile:
                 htmlFile.write( '      <div class="title"><i class="dropdown icon"></i>' + content.title + '</div>\n' )
                 htmlFile.write( '      <div class="content">\n' )
+                htmlFile.write( '        <a href="' + content.url + '" target="_blank"><blockquote>NEWS link</blockquote></a>\n' )
+                htmlFile.write( '        <p class="transition hidden"><blockquote>Published time: ' + content.publish_date.isoformat() + '</blockquote></p>\n' )
                 formattedText = content.text.replace( "\n", "<br>" )
                 htmlFile.write( '        <p class="transition hidden"><blockquote>' + formattedText + '</blockquote></p>\n' )
                 htmlFile.write( '      </div>\n' )
