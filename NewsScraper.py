@@ -159,7 +159,7 @@ for company, value in companies.items():
             # if the time is out of date, ignore it.
             if not str(article['published']).startswith( nowDay ):
                 print( 'Got a news but not today: {}, {}'.format(nowDay, article['published']) )
-                count = count - 1
+                #count = count - 1
                 continue
             newsPaper['articles'].append(article)
             print(count, "articles downloaded from", company, " using newspaper, url: ", content.url)
