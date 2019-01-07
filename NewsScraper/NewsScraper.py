@@ -26,6 +26,9 @@ class NewsScraper:
         copyfile('index_head.txt', 'news' + nowday + '.html')
         return open( 'news' + nowday + '.html', "a", encoding='utf8')
 
+    def getHTMLTail(self):
+        return open( 'index_tail.txt', "r", encoding='utf8')
+
 
 # Set the limit for number of articles to download
 #LIMIT = 50
@@ -50,6 +53,7 @@ class NewsScraper:
 
 
         htmlFile = self.createHTML(nowTime)
+        htmlTailContent = self.getHTMLTail().read()
 
 
         # Iterate through each news company
@@ -71,9 +75,9 @@ class NewsScraper:
                 # TODO: dump data to each company file
                 outputFile = open( 'news/' + nowDay + '/' + company + nowTime + "_rss.txt", "a", encoding='utf8')
                 if htmlFile:
-                    htmlFile.write( '\n<h1 style=\'color: white\'>' + company + '</h1>\n' )
-                    htmlFile.write( '  <div class="ui inverted segment">\n' )
-                    htmlFile.write( '    <div class="ui inverted accordion" style="width:600px;">\n' )
+                    htmlFile.write( '\n<h1>' + company + '</h1>\n' )
+                    htmlFile.write( '  <div class="ui segment" style=" color: #FFF4E0; background-color: #393E46">\n' )
+                    htmlFile.write( '    <div class="ui accordion" style="width:600px; color: #FFF4E0; background-color: #393E46">\n' )
 #               outputFile = open( 'index_', "a", encoding='utf8')
                 for entry in d.entries:
                     # Check if publish date is provided, if no the article is skipped.
@@ -111,7 +115,7 @@ class NewsScraper:
                             outputFile.write( '***** ' + content.title + ' *****\n\n' )
                             outputFile.write( content.text + '\n\n' )
                         if htmlFile:
-                            htmlFile.write( '      <div class="title"><i class="dropdown icon"></i>' + content.title + '</div>\n' )
+                            htmlFile.write( '      <div class="title" style="color: #FFF4E0;"><i class="dropdown icon" style="color: #f8b500;"></i>' + content.title + '</div>\n' )
                             htmlFile.write( '      <div class="content">\n' )
                             htmlFile.write( '        <a href="' + entry.link + '" target="_blank"><blockquote>NEWS link</blockquote></a>\n' )
                             htmlFile.write( '        <p class="transition hidden"><blockquote>Published time: ' + article['published'] + '</blockquote></p>\n' )
@@ -136,9 +140,9 @@ class NewsScraper:
                 outputFile = open( 'news/' + nowDay + '/' + company + nowTime + "_sites.txt", "a", encoding='utf8')
 
                 if htmlFile:
-                    htmlFile.write( '\n<h1 style=\'color: white\'>' + company + '</h1>\n' )
-                    htmlFile.write( '  <div class="ui inverted segment">\n' )
-                    htmlFile.write( '    <div class="ui inverted accordion" style="width:600px;">\n' )
+                    htmlFile.write( '\n<h1>' + company + '</h1>\n' )
+                    htmlFile.write( '  <div class="ui segment" style=" color: #FFF4E0; background-color: #393E46">\n' )
+                    htmlFile.write( '    <div class="ui accordion" style="width:600px; color: #FFF4E0; background-color: #393E46">\n' )
 
                 for content in paper.articles:
                     if count > self.LIMIT:
@@ -184,7 +188,7 @@ class NewsScraper:
                         outputFile.write( content.url + '\n\n' )
                         outputFile.write( content.publish_date.isoformat() + '\n\n' )
                     if htmlFile:
-                        htmlFile.write( '      <div class="title"><i class="dropdown icon"></i>' + content.title + '</div>\n' )
+                        htmlFile.write( '      <div class="title" style="color: #FFF4E0;"><i class="dropdown icon" style="color: #f8b500;"></i>' + content.title + '</div>\n' )
                         htmlFile.write( '      <div class="content">\n' )
                         htmlFile.write( '        <a href="' + content.url + '" target="_blank"><blockquote>NEWS link</blockquote></a>\n' )
                         htmlFile.write( '        <p class="transition hidden"><blockquote>Published time: ' + content.publish_date.isoformat() + '</blockquote></p>\n' )
@@ -197,9 +201,11 @@ class NewsScraper:
             count = 1
             data['newspapers'][company] = newsPaper
 
-        if htmlFile:
+        if not htmlTailContent:
             htmlFile.write( '</body>' )
             htmlFile.write( '</html>' )
+        else:
+            htmlFile.write( htmlTailContent )
         # Finally it saves the articles as a JSON-file.
         try:
             with open('news/' + nowDay + '/' + 'scraped_articles' + nowTime + '.json', 'w', encoding='utf8') as outfile:
