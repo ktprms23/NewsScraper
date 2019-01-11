@@ -1,27 +1,31 @@
 {
 	"applenews": {
-		"rss": "https://tw.appledaily.com/rss/newcreate/kind/rnews/type/101",
-                "link": "https://tw.appledaily.com/"
+                "link": "https://tw.appledaily.com/new/realtime"
 	},
         "ltn": {
-		"rss": "http://news.ltn.com.tw/rss/politics.xml",
-		"link": "http://www.ltn.com.tw/"
+                "link" : "http://news.ltn.com.tw",
+		"rss": "http://news.ltn.com.tw/rss/politics.xml"
 	},
         "peoplenews": {
-                "link": "http://www.peoplenews.tw/list/%E6%94%BF%E6%B2%BB"
+                "link": "https://www.peoplenews.tw",
+                "rss": "https://www.peoplenews.tw/rss/%E6%94%BF%E6%B2%BB"
         },
         "udn": {
                 "rss": "https://udn.com/rssfeed/news/2/6638?ch=news",
-                "link": "https://udn.com/news/index"
+                "link": "https://udn.com/"
         },
         "chinatimes": {
                 "rss": "https://www.chinatimes.com/rss/realtimenews-politic.xml",
-                "link": "https://www.chinatimes.com/politic/"
+                "link": "https://www.chinatimes.com"
         },
         "set": {
-                "link": "https://www.setn.com/"
+                "link": "https://www.setn.com/ViewAll.aspx"
         },
         "ettoday": {
-                "link": "https://www.ettoday.net/news/focus/%E6%94%BF%E6%B2%BB/"
+                "link": "https://www.ettoday.net/news/news-list.htm"
+        },
+        "cna": {
+                "rss": "http://feeds.feedburner.com/rsscna/politics",
+                "link": "https://www.cna.com.tw/"
         }
 }

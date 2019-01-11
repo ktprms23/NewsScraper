@@ -12,7 +12,7 @@ from shutil import copyfile
 
 
 class NewsScraper:
-    def __init__(self, limitNews = 5):
+    def __init__(self, limitNews = 30):
         self.LIMIT = limitNews
         self.data = {}
         self.data['newspapers'] = {}
