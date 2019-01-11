@@ -12,11 +12,30 @@ from shutil import copyfile
 
 
 class NewsScraper:
-    def __init__(self, limitNews = 50):
+    def __init__(self, limitNews = 5):
         self.LIMIT = limitNews
         self.data = {}
         self.data['newspapers'] = {}
 
+
+    def getTimeOffset(self, ntime):
+        offset = 8
+#        print( '-6:' + ntime[-6] )
+#        print( '20:21 ' + ntime[20:22] )
+#        print( '11:12 ' + ntime[11:13] )
+        if ntime[-6] == '+':
+            offset = offset - int(ntime[20:22])
+        elif ntime[-6] == '-':
+            offset = offset + int(ntime[20:22])
+
+        nCSTTime = ntime[0:11]
+        if int(ntime[11:13]) + offset >= 7 and int(ntime[11:13]) + offset <= 22:
+            nCSTTime += '%02d' % (int(ntime[11:13]) + offset)
+            nCSTTime += ntime[13:19]
+            nCSTTime += '+08:00'
+        else:
+            nCSTTime += ntime[11:]
+        return nCSTTime
 
 
 
@@ -48,6 +67,9 @@ class NewsScraper:
 
         nowDay = datetime.now().strftime( '%Y-%m-%d' )
         nowTime = datetime.now().strftime( "_%Y-%m-%d_%H-%M-%S" )
+        grabedTimeCheck = datetime.now().strftime( "%Y-%m-%dT" )
+        grabedTimeCheckHour = int(datetime.now().strftime( "%H" )) - 1
+        grabedTimeCheck += '%02d' % grabedTimeCheckHour
 
         pathlib.Path( 'news/' + nowDay ).mkdir(parents=True, exist_ok=True)
 
@@ -88,11 +110,16 @@ class NewsScraper:
                         article = {}
                         article['link'] = entry.link
                         date = entry.published_parsed
-                        article['published'] = datetime.fromtimestamp(mktime(date)).isoformat()
+                        newTimeOffset = self.getTimeOffset(datetime.fromtimestamp(mktime(date)).isoformat())
+                        article['published'] = newTimeOffset
                 
                         # if the time is out of date, ignore it.
                         if not str(article['published']).startswith( nowDay ):
                             print( 'Got a news but not today: {}, {}'.format(nowDay, article['published']) )
+                            continue
+                        if not str(article['published']).startswith( grabedTimeCheck ):
+                            print( 'Got a news but not this hour: {}, {}'.format(grabedTimeCheck, article['published']) )
+                            #count = count - 1
                             continue
                         try:
                             content = Article(entry.link)
@@ -169,11 +196,16 @@ class NewsScraper:
                     article['title'] = content.title
                     article['text'] = content.text
                     article['link'] = content.url
-                    article['published'] = content.publish_date.isoformat()
+                    newTimeOffset = self.getTimeOffset(content.publish_date.isoformat())
+                    article['published'] = newTimeOffset
 
                     # if the time is out of date, ignore it.
                     if not str(article['published']).startswith( nowDay ):
                         print( 'Got a news but not today: {}, {}'.format(nowDay, article['published']) )
+                        #count = count - 1
+                        continue
+                    if not str(article['published']).startswith( grabedTimeCheck ):
+                        print( 'Got a news but not this hour: {}, {}'.format(grabedTimeCheck, article['published']) )
                         #count = count - 1
                         continue
                     newsPaper['articles'].append(article)
